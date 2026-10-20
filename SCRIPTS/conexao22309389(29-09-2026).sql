@@ -9,7 +9,7 @@ dados INTEGER que est�o no modelo por NUMBER.
 */
 
 
-/*
+
 DROP TABLE FONE_CLIENTE CASCADE CONSTRAINTS;
 DROP TABLE FONE_VENDEDOR CASCADE CONSTRAINTS;
 DROP TABLE PF CASCADE CONSTRAINTS;
@@ -92,7 +92,7 @@ CREATE TABLE FONE_VENDEDOR (
         FOREIGN KEY (MATRICULA_VEN)
         REFERENCES VENDEDOR (MATRICULA)
 ); 
-*/
+
 
 
 /*
@@ -118,7 +118,7 @@ NUMBER.
 3) Criar as constraints das chaves estrangeiras (foreing key) para as tabelas associativas. */
 
 
-/*
+
 DROP TABLE ITEM_PRODUTO CASCADE CONSTRAINTS;
 DROP TABLE CAPACIDADE_ESTOQUE CASCADE CONSTRAINTS;
 DROP TABLE ESTOQUE CASCADE CONSTRAINTS;
@@ -164,12 +164,12 @@ CREATE TABLE ITEM_PRODUTO (
     VALOR_ITEM NUMBER(7,2)
 );
 
-*/
+
 
 -- Chaves pim�rias 
 
 
-/*
+
 ALTER TABLE PEDIDO
 ADD CONSTRAINT PK_PEDIDO
 PRIMARY KEY (NUMERO);
@@ -186,11 +186,11 @@ ALTER TABLE ITEM_PRODUTO
 ADD CONSTRAINT PK_ITEM_PRODUTO
 PRIMARY KEY (CODIGO_PRO, NUMERO_PED);
 
-*/
+
 
 -- CHAVES ESTRANGEIRAS 
 
-/*
+
 
 ALTER TABLE PEDIDO
 ADD CONSTRAINT FK_PED_CLIENTE
@@ -232,7 +232,7 @@ ADD CONSTRAINT FK_ITEM_PRODUTO
 FOREIGN KEY (CODIGO_PRO)
 REFERENCES PRODUTO (CODIGO);
 
-*/
+
 
 /* TESTANDO CONSTRAISTS 
 
@@ -293,8 +293,92 @@ INSERT INTO PEDIDO (
 
 */
 
+/*
+BD2 - 2o Bim -Atividade de SQL - Exercícios de DDL - Tabelas, Constraints, Indices e
+Sequences do Projeto Pedido - Parte 3
+Queries implementadas na linguagem SQL aplicadas no SGBDR Oracle, apoiadas no
+SqlDeveloper. Utilizar o MER Físico e BD Pedido disponibilizado para treinamento da disciplina
+de Banco de Dados.
+1) Criar uma constraint que garanta que o valor do NUMERO da tabela PEDIDO esteja
+entre, inclusive, 1 e 99999. O nome da constraint (regra) está no modelo físico de
+dados.
+2) Criar os indexes das tabelas PF e PJ. Estes indexes serão únicos e utilizados como
+listas invertidas. Nomes para os índices estão no modelo físico. Nomes para as
+constraints(regras) de unicidade: UK_PF_CNPF e UK_PJ_CNPJ.
+3) Criar uma sequence de nome SEQ_ITEM_ID para o campo CODIGO de
+ITEM_PRODUTO, com incremento de 2. 
+*/
+
+-- Constraint da tabela PEDIDO
+
+ALTER TABLE PEDIDO
+ADD CONSTRAINT CK_NUMERO_PEDIDO
+CHECK (NUMERO BETWEEN 1 AND 99999);
+
+-- INDEXAÇÃO DE PF E PJ
+CREATE UNIQUE INDEX IND_CNPF_PF
+ON PF (CNPF);
+
+CREATE UNIQUE INDEX IND_CNPJ_PJ
+ON PJ (CNPJ);
+
+-- CONSTRAINTS
+ALTER TABLE PF
+ADD CONSTRAINT UK_PF_CNPF UNIQUE (CNPF);
+
+ALTER TABLE PJ
+ADD CONSTRAINT UK_PJ_CNPJ UNIQUE (CNPJ);
+
+--SEQUENCIA PARA CODIGO DE ITEM_PRODUTO 
+CREATE SEQUENCE SEQ_ITEM_ID
+    INCREMENT BY 2;
+    
+--TESTANDO SEQUENCIA:
+
+DESC ITEM_PRODUTO
+
+INSERT INTO ITEM_PRODUTO(
+    CODIGO_PRO,
+    NUMERO_PED,
+    QUANTIDADE,
+    PRECO_UNITARIO
+) VALUES (
+    123,
+    1,
+    10,
+    20
+);
+
+SELECT * FROM PEDIDO;
+SELECT * FROM PRODUTO;
+
+DESC PRODUTO
+
+INSERT INTO PRODUTO (
+    CODIGO,
+    DESCRICAO,
+    UNID_MEDIDA
+) VALUES (
+    123,
+    'PRODUTO BOM',
+    'METROS'
+);
 
 
+COMMENT ON TABLE ITEM_PRODUTO IS
+'Itens dos pedidos realizados';
 
+COMMENT ON COLUMN ITEM_PRODUTO.CODIGO_PRO IS
+'Código do produto';
 
---Comment to add new commit message
+COMMENT ON COLUMN ITEM_PRODUTO.NUMERO_PED IS
+'Número do pedido';
+
+COMMENT ON COLUMN ITEM_PRODUTO.QUANTIDADE IS
+'Quantidade do produto no pedido';
+
+COMMENT ON COLUMN ITEM_PRODUTO.PRECO_UNITARIO IS
+'Preço unitário do produto';
+
+COMMENT ON COLUMN ITEM_PRODUTO.VALOR_ITEM IS
+'Valor total do item';
