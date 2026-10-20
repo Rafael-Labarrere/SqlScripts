@@ -364,6 +364,13 @@ INSERT INTO PRODUTO (
     'METROS'
 );
 
+/*
+BD2 - 2o Bim - Atividade de SQL - Exercícios de DDL - Comentários em tabelas - Parte 5
+Queries implementadas na linguagem SQL aplicadas no SGBDR Oracle, apoiadas no
+SqlDeveloper. Utilizar o MER Físico e BD Pedido disponibilizado para treinamento da disciplina
+de Banco de Dados.
+1) Criar comentários para a tabela ITEM_PRODUTO e suas respectivas colunas.
+*/
 
 COMMENT ON TABLE ITEM_PRODUTO IS
 'Itens dos pedidos realizados';
